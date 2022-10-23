@@ -1,3 +1,5 @@
+#pragma once
+
 namespace rian
 {
 	class HyperParm
@@ -6,7 +8,7 @@ namespace rian
 		float LearningRate;
 		float MomentumRate;
 		float BiasInitValue;
-		
+
 		HyperParm()
 		{
 			/* Default Value */

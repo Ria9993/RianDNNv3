@@ -127,11 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HyperParm.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Weights.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Activation.h" />
+    <ClInclude Include="Layer.h" />
+    <ClInclude Include="HyperParm.h" />
     <ClInclude Include="RianDNN.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
