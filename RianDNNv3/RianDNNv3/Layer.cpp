@@ -2,9 +2,10 @@
 
 namespace rian
 {
-	Layer::Layer(int size, float(*Activation)(float), float biasInit)
+	Layer::Layer(int size, float (*Activation)(float), float biasInit)
 	{
 		this->size = size;
+		act = Activation;
 
 		bias.resize(size, biasInit);
 		result.resize(size, 0);

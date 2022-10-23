@@ -30,6 +30,9 @@
     <ClCompile Include="Layer.cpp">
       <Filter>RianDNN</Filter>
     </ClCompile>
+    <ClCompile Include="Forward.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RianDNN.h">
@@ -42,6 +45,9 @@
       <Filter>RianDNN</Filter>
     </ClInclude>
     <ClInclude Include="Activation.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
       <Filter>RianDNN</Filter>
     </ClInclude>
   </ItemGroup>

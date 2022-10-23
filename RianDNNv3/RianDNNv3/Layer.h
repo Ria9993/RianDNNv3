@@ -13,6 +13,7 @@ namespace rian
 
 		std::vector<float> bias;
 		std::vector<float> result;
+		float (*act)(float);
 
 		// learning data
 #ifndef ONLY_FORWARD
