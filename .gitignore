@@ -33,3 +33,9 @@
 
 # Visual Studio
 .vs
+
+# VS Debug
+x64/
+x86/
+[Dd]ebug/
+[Rr]elease/

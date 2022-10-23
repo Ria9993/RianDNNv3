@@ -4,7 +4,6 @@
 #include "Layer.h"
 #include "Weights.h"
 #include "Activation.h"
-
 #include <vector>
 
 namespace rian
@@ -12,16 +11,17 @@ namespace rian
 	class Model
 	{
 	public:
-		Model(const HyperParm& hyperParm)
+		Model(HyperParm& hyperParm)
 		{
-		}
-		void AddLayer(int size, float (*Activation)(float))
-		{
-			layers.emplace_back(size, Activation);
+			this->hyperParm = hyperParm;
 		}
 
+		void AddLayer(int size, float (*Activation)(float));
+
 	private:
-		std::vector<Layer<float>> layers;
-		std::vector<Weights<float>> weight;
+		HyperParm hyperParm;
+
+		std::vector<Layer> layers;
+		std::vector<Weights> weight;
 	};
 }

@@ -4,21 +4,13 @@
 
 namespace rian
 {
-	class ReLU
+	__forceinline float ReLU(float x)
 	{
-	public:
-		float calc(float x)
-		{
-			return std::max(0, x);
-		}
-	};
+		return std::max(0.0f, x);
+	}
 
-	class None
+	__forceinline float None(float x)
 	{
-	public:
-		float calc(float x)
-		{
-			return x;
-		}
-	};
+		return x;
+	}
 }
