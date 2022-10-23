@@ -15,11 +15,14 @@ namespace rian
 		{
 			this->hyperParm = hyperParm;
 			this->forwardCount = 0;
+			this->errorComputeCount = 0;
 		}
 
-		void AddLayer(int size, float (*Activation)(float));
+		void AddLayer(int size, Activation act);
 		std::vector<float>& GetInputVector();
 		void Forward();
+		void ComputeError(const std::vector<float>& target);
+		void Optimize();
 		const std::vector<float>& GetResult();
 
 	private:
@@ -31,6 +34,7 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		int forwardCount;
+		int errorComputeCount;
 #endif
 	};
 }

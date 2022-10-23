@@ -4,13 +4,19 @@
 
 namespace rian
 {
-	__forceinline float ReLU(float x)
+	enum class Activation
 	{
-		return std::max(0.0f, x);
-	}
+		ReLU,
+		None
+	};
 
-	__forceinline float None(float x)
-	{
-		return x;
-	}
+	//__forceinline float ReLU(float x)
+	//{
+	//	return std::max(0.0f, x);
+	//}
+
+	//__forceinline float None(float x)
+	//{
+	//	return x;
+	//}
 }

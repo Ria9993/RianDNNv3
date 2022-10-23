@@ -28,10 +28,10 @@ int main()
 	rian::HyperParm hyperParm;
 
 	rian::Model model(hyperParm);
-	model.AddLayer(2, rian::None);
-	model.AddLayer(1000, rian::ReLU);
-	model.AddLayer(1000, rian::ReLU);
-	model.AddLayer(2, rian::None);
+	model.AddLayer(2, rian::Activation::None);
+	model.AddLayer(1000, rian::Activation::ReLU);
+	model.AddLayer(1000, rian::Activation::ReLU);
+	model.AddLayer(2, rian::Activation::None);
 
 	std::vector<float>& input = model.GetInputVector();
 	input[0] = 5.0f;

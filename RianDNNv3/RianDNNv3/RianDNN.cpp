@@ -2,9 +2,9 @@
 
 namespace rian
 {
-	void Model::AddLayer(int size, float (*Activation)(float))
+	void Model::AddLayer(int size, Activation act)
 	{
-		layers.emplace_back(size, Activation, hyperParm.BiasInitValue);
+		layers.emplace_back(size, act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
 		if (layersSize > 1)
@@ -22,5 +22,18 @@ namespace rian
 	const std::vector<float>& Model::GetResult()
 	{
 		return layers.rbegin()->result;
+	}
+
+	void Model::ComputeError(const std::vector<float>& target)
+	{
+		Layer& outLayer = layers[layers.size() - 1];
+		for (int i = 0; i < outLayer.size; i++)
+		{
+			// (Output - Target) ^ 2
+			outLayer.backprop[i] += (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
+		}
+
+		// counting for case of many forward but only errorCompute once
+		errorComputeCount += 1;
 	}
 }

@@ -33,6 +33,9 @@
     <ClCompile Include="Forward.cpp">
       <Filter>RianDNN</Filter>
     </ClCompile>
+    <ClCompile Include="Optimize.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RianDNN.h">

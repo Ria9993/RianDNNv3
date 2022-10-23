@@ -19,7 +19,6 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		momentum.resize((size_t)srcSize * destSize, 0);
-		forwardSum.resize((size_t)srcSize * destSize, 0);
 #endif
 	}
 }

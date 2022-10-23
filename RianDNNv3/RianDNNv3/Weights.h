@@ -17,7 +17,6 @@ namespace rian
 #ifndef ONLY_FORWARD
 		// using by 2d
 		std::vector<float> momentum;
-		std::vector<float> forwardSum;
 #endif
 
 	};

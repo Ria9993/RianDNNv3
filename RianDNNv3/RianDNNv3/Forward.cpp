@@ -1,9 +1,18 @@
 #include "RianDNN.h"
+#include <algorithm>
 
-// C++ AMP
-// not supported after VS2022
+/* C++ AMP
+	 not supported after VS2022 */
+//#define GPGPU
+#ifdef GPGPU
 #include <amp.h>
 using namespace concurrency;
+#endif
+
+/* C++ OpenMP
+	support Multi-thread */
+#pragma warning(disable:6993)
+#include <omp.h>
 
 namespace rian
 {
@@ -16,7 +25,7 @@ namespace rian
 			Layer& dest_layer = layers[(size_t)layer_idx + 1];
 
 			// compute weight
-#if 1 // GPGPU
+#ifdef GPGPU //(Not Implemented yet)
 			array_view<float, 1> in(src_layer.size, src_layer.result.data());
 			array_view<float, 2> w(src_layer.size, dest_layer.size, now_weight.v.data());
 			array_view<float, 1> out(dest_layer.size, dest_layer.result.data());
@@ -30,31 +39,53 @@ namespace rian
 					out[idx] = 0;
 					for (int src_i = 0; src_i < src_size; src_i++)
 					{
-						//out[idx] += in[src_i] * w[src_i][idx];
+						out[idx] += in[src_i] * w[src_i][idx];
 					}
 				}
 			);
 			out.synchronize();
 
 #else // ONLY CPU
-#pragma omp parallel
+#pragma omp parallel for
 			for (int out_i = 0; out_i < dest_layer.size; out_i++)
 			{
+				// calculate weight
 				dest_layer.result[out_i] = 0;
 				for (int src_i = 0; src_i < src_layer.size; src_i++)
 				{
-					dest_layer.result[out_i] += src_layer.result[src_i] * now_weight.v[(size_t)src_i * dest_layer.size + out_i];
+					const size_t idx_2d = (size_t)src_i * dest_layer.size + out_i;
+
+					dest_layer.result[out_i] += src_layer.result[src_i] * now_weight.v[idx_2d];
+				}
+
+				// compute bias & act_func
+				dest_layer.result[out_i] += dest_layer.bias[out_i];
+
+				// compute activation function & derivative
+				switch (dest_layer.act)
+				{
+				case Activation::ReLU:
+					if (dest_layer.result[out_i] > 0)
+						dest_layer.actDiffSum[out_i] += 1;
+					else
+						dest_layer.result[out_i] = 0;
+					break;
+				case Activation::None:
+					dest_layer.actDiffSum[out_i] += 1;
+					break;
 				}
 			}
 #endif
 
-			// compute bias & act_func
-#pragma omp parallel
-			for (int i = 0; i < dest_layer.size; i++)
+			// compute weight differentiation
+#ifndef ONLY_FORWARD
+			for (int i = 0; i < src_layer.size; i++)
 			{
-				dest_layer.result[i] += dest_layer.bias[i];
-				dest_layer.result[i] = dest_layer.act(dest_layer.result[i]);
+				src_layer.forwardSum[i] += src_layer.result[i];
 			}
+#endif
 		}
+
+		forwardCount += 1;
 	}
 }
