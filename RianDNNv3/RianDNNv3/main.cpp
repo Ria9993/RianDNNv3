@@ -28,7 +28,7 @@ int main()
 {
 	rian::HyperParm hyperParm;
 	hyperParm.MomentumRate = 0.9f;
-	hyperParm.LearningRate = 0.1E-5;
+	hyperParm.LearningRate = 0.1E-5f;
 
 	rian::Model model(hyperParm);
 	model.AddLayer(1, rian::Activation::None);
