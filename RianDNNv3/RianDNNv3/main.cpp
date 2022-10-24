@@ -34,6 +34,7 @@ int main()
 	model.AddLayer(1, rian::Activation::None);
 	model.AddLayer(10, rian::Activation::LeakyReLU);
 	model.AddLayer(10, rian::Activation::LeakyReLU);
+	model.AddLayer(10, rian::Activation::LeakyReLU);
 	model.AddLayer(1, rian::Activation::None);
 
 	std::vector<float>& input = model.GetInputVector();
@@ -41,7 +42,7 @@ int main()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> rand(0.0f, 10.0f);
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 10000; i++)
 	{
 		{
 			input[0] = rand(gen);
@@ -58,7 +59,7 @@ int main()
 			}
 			cout << endl;
 		}
-		if (i % 50 == 0)
+		if (i % 10 == 0)
 			model.Optimize();
 	}
 
