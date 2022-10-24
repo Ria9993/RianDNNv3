@@ -50,8 +50,8 @@ namespace rian
 					layer.backprop[i] += grad;
 				}
 				// get average of derivative, for prevent gradient exploding in deep layer 
-				layer.backprop[i] /= layer.size;
-				// compute activation derivative
+				layer.backprop[i] /= frontLayer.size;
+				
 				layer.backprop[i] *= layer.actDiffSum[i] / forwardCount;
 			}
 		}
