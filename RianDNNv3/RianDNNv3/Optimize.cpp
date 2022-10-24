@@ -24,7 +24,7 @@ namespace rian
 			Layer& frontLayer = layers[(size_t)layer_idx + 1];
 
 			// frontLayer bias update
-			for (int i = 0; i < layer.size; i++)
+			for (int i = 0; i < frontLayer.size; i++)
 			{
 				frontLayer.biasMomentum[i] = 
 					(frontLayer.biasMomentum[i] * hyperParm.MomentumRate)

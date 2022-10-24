@@ -29,8 +29,10 @@ namespace rian
 		Layer& outLayer = layers[layers.size() - 1];
 		for (int i = 0; i < outLayer.size; i++)
 		{
-			// (Output - Target) ^ 2
-			outLayer.backprop[i] += (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
+			outLayer.backprop[i] += outLayer.result[i] - target[i];
+
+			// Error = (Output - Target) ^ 2
+			// utLayer.backprop[i] += (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
 		}
 
 		// counting for case of many forward but only errorCompute once

@@ -7,7 +7,8 @@ namespace rian
 	enum class Activation
 	{
 		ReLU,
-		None
+		LeakyReLU,
+		None,
 	};
 
 	//__forceinline float ReLU(float x)

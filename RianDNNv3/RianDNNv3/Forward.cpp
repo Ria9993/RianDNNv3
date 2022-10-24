@@ -70,6 +70,15 @@ namespace rian
 					else
 						dest_layer.result[out_i] = 0;
 					break;
+				case Activation::LeakyReLU:
+					if (dest_layer.result[out_i] > 0)
+						dest_layer.actDiffSum[out_i] += 1;
+					else
+					{
+						dest_layer.result[out_i] *= 0.01f;
+						dest_layer.actDiffSum[out_i] += 0.01f;
+					}
+					break;
 				case Activation::None:
 					dest_layer.actDiffSum[out_i] += 1;
 					break;
@@ -86,6 +95,7 @@ namespace rian
 #endif
 		}
 
+		// forward Counting
 		forwardCount += 1;
 	}
 }
