@@ -1,5 +1,7 @@
 # RianDNNv3
-Just simple neural-network library
+Just simple neural-network library  
+### blog post  
+<https://ria9993.github.io/cs/2022/10/14/intro-neural-network-learning.html>
 ## Exmaple
 ### Learning f(x) = 2x
 ```cpp
