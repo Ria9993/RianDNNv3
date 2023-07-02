@@ -46,7 +46,7 @@ namespace rian
 			out.synchronize();
 
 #else // ONLY CPU
-#pragma omp parallel for
+//#pragma omp parallel for
 			for (int out_i = 0; out_i < dest_layer.size; out_i++)
 			{
 				// calculate weight

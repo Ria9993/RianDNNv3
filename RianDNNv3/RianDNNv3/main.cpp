@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <iomanip>
 using namespace std;
 using namespace chrono;
 
@@ -22,45 +23,65 @@ __forceinline void timeEnd()
 void timePrint()
 {
 	cout << static_cast<nanoseconds>(endTime - startTime).count() << "ns" << endl;
-
 }
+
+double sigmoid_1(double z) {
+	return (1 / (1 + std::exp(-z)));
+}
+
 int main()
 {
 	rian::HyperParm hyperParm;
 	hyperParm.MomentumRate = 0.9f;
-	hyperParm.LearningRate = 0.1E-5f;
+	hyperParm.LearningRate = 0.1E-4f;
 
 	rian::Model model(hyperParm);
 	model.AddLayer(1, rian::Activation::None);
-	model.AddLayer(10, rian::Activation::LeakyReLU);
-	model.AddLayer(10, rian::Activation::LeakyReLU);
-	model.AddLayer(10, rian::Activation::LeakyReLU);
+	model.AddLayer(100, rian::Activation::LeakyReLU);
+	model.AddLayer(100, rian::Activation::LeakyReLU);
+	model.AddLayer(100, rian::Activation::LeakyReLU);
+	model.AddLayer(100, rian::Activation::LeakyReLU);
+	model.AddLayer(100, rian::Activation::LeakyReLU);
 	model.AddLayer(1, rian::Activation::None);
 
 	std::vector<float>& input = model.GetInputVector();
 	//std::vector<float> target = { 1.0f, -1.0f, 3.1415f };
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> rand(0.0f, 10.0f);
-	for (int i = 0; i < 10000; i++)
+	std::uniform_real_distribution<float> rand(0.0f, 100.0f);
+	for (int i = 0; i < 10000000; i++)
 	{
+		static double result_list[100] = { 0, };
 		{
 			input[0] = rand(gen);
 			model.Forward();
 
 			std::vector<float> target(1);
-			target[0] = input[0] * 2;
+			target[0] = sigmoid_1(input[0]);
 			model.ComputeError(target);
 
-			cout << "input : " << input[0] << ", result : ";
+			/* cout << "input : " << input[0] << ", result : ";
 			for (float itr : model.GetResult())
 			{
 				cout << itr << ", ";
 			}
-			cout << endl;
+			cout << std::endl;*/
+			result_list[i % 100] = (model.GetResult()[0] / target[0]) * 100;
+			//cout << (model.GetResult()[0] / target[0]) * 100 << '%' << endl;
 		}
-		if (i % 10 == 0)
+		if (i % 100 == 0)
+		{
+			if (i % 1000 == 0)
+			{
+				double sum = 0;
+				for (int j = 0; j < 100; j++)
+					sum += result_list[j];
+				cout.precision(5);
+				cout << fixed;
+				cout << "¿ÀÂ÷À² : " << setw(10) <<  100 - (sum / 100) << '%' << endl;
+			}
 			model.Optimize();
+		}
 	}
 
 	//timeStart();

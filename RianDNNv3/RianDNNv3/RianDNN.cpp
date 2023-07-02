@@ -24,15 +24,19 @@ namespace rian
 		return layers.rbegin()->result;
 	}
 
+
 	void Model::ComputeError(const std::vector<float>& target)
 	{
 		Layer& outLayer = layers[layers.size() - 1];
 		for (int i = 0; i < outLayer.size; i++)
 		{
-			outLayer.backprop[i] += outLayer.result[i] - target[i];
+			outLayer.backprop[i] += 2 * (outLayer.result[i] - target[i]);
+			
+			//float error = (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
+			//if ((outLayer.result[i] - target[i]) < 0)
+			//	error = -error;
 
-			// Error = (Output - Target) ^ 2
-			// utLayer.backprop[i] += (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
+			//outLayer.backprop[i] += error;
 		}
 
 		// counting for case of many forward but only errorCompute once

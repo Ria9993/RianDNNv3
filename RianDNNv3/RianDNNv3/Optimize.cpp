@@ -5,7 +5,7 @@
 	support Multi-thread */
 #pragma warning(disable:6993)
 #include <omp.h>
-
+#include <iostream>
 namespace rian
 {
 	void Model::Optimize()
@@ -14,7 +14,7 @@ namespace rian
 		for (int i = 0; i < outLayer.size; i++)
 		{
 			outLayer.backprop[i] /= errorComputeCount;
-			outLayer.backprop[i] *= outLayer.actDiffSum[i] / forwardCount;
+			outLayer.backprop[i] *= (outLayer.actDiffSum[i] / forwardCount);
 		}
 
 		// backprop & update
@@ -35,24 +35,25 @@ namespace rian
 			// pull frontLayer's derivative and weight update
 			for (int i = 0; i < layer.size; i++)
 			{
-				layer.forwardSum[i] /= forwardCount;
 				for (int front_idx = 0; front_idx < frontLayer.size; front_idx++)
 				{
 					const size_t idx_2d = (size_t)i * frontLayer.size + front_idx;
-					const float grad = frontLayer.backprop[front_idx] * layer.forwardSum[i];
+					const float grad =
+						(frontLayer.backprop[front_idx] / forwardCount)
+						* (layer.forwardSum[i] / forwardCount);
+
+					// stacking derivative
+					layer.backprop[i] += weight[layer_idx].v[idx_2d];
 
 					weight[layer_idx].momentum[idx_2d] =
 						(weight[layer_idx].momentum[idx_2d] * hyperParm.MomentumRate)
 						- (hyperParm.LearningRate * grad);
 					weight[layer_idx].v[idx_2d] += weight[layer_idx].momentum[idx_2d];
-
-					// stacking derivative
-					layer.backprop[i] += grad;
 				}
 				// get average of derivative, for prevent gradient exploding in deep layer 
-				layer.backprop[i] /= frontLayer.size;
+				//layer.backprop[i] /= frontLayer.size;
 				
-				layer.backprop[i] *= layer.actDiffSum[i] / forwardCount;
+				layer.backprop[i] = (layer.backprop[i] / forwardCount) * (layer.actDiffSum[i] / forwardCount);
 			}
 		}
 
@@ -71,5 +72,9 @@ namespace rian
 		// clear parameter
 		forwardCount = 0;
 		errorComputeCount = 0;
+
+		hyperParm.LearningRate *= 0.999f;
+		//std::cout.precision(10);
+		//std::cout << "lr = " << hyperParm.LearningRate << std::endl;
 	}
 }
