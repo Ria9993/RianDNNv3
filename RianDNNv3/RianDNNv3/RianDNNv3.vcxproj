@@ -134,6 +134,7 @@
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RianDNN.cpp" />
+    <ClCompile Include="Sequential_data_test_main.cpp" />
     <ClCompile Include="Weights.cpp" />
     <ClCompile Include="Weights.h" />
   </ItemGroup>

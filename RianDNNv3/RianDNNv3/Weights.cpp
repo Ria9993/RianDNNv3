@@ -1,6 +1,6 @@
-#include "Weights.h"
 #include <random>
 #include <cmath>
+#include "Weights.h"
 
 namespace rian
 {

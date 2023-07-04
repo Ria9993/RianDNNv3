@@ -25,7 +25,6 @@ namespace rian
 		void Optimize();
 		const std::vector<float>& GetResult();
 
-	private:
 		HyperParm hyperParm;
 
 		std::vector<Layer> layers;

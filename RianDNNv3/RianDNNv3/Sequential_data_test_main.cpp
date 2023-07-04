@@ -1,3 +1,4 @@
+#if 0
 //#define ONLY_FORWARD
 #include"RianDNN.h"
 
@@ -32,12 +33,11 @@ double sigmoid_1(double z) {
 int main()
 {
 	rian::HyperParm hyperParm;
-	hyperParm.MomentumRate = 0.9f;
-	hyperParm.LearningRate = 0.1E-4f;
+	hyperParm.MomentumRate = 0.90f;
+	hyperParm.LearningRate = 0.1E-3f;
 
 	rian::Model model(hyperParm);
-	model.AddLayer(1, rian::Activation::None);
-	model.AddLayer(100, rian::Activation::LeakyReLU);
+	model.AddLayer(20, rian::Activation::None);
 	model.AddLayer(100, rian::Activation::LeakyReLU);
 	model.AddLayer(100, rian::Activation::LeakyReLU);
 	model.AddLayer(100, rian::Activation::LeakyReLU);
@@ -49,15 +49,25 @@ int main()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<float> rand(0.0f, 100.0f);
-	for (int i = 0; i < 10000000; i++)
+	std::uniform_real_distribution<float> rand2(-10.0f, 10.0f);
+
+	std::uniform_int_distribution<int> rand_idx(0, 9980 - 1);
+	static float table[10000];
+	for (int i = 0; i < 10000; i++)
+		table[i] = rand2(gen);
+
+	for (int i = 0; i < 100000000; i++)
 	{
-		static double result_list[100] = { 0, };
+		static double result_list[10000] = { 0, };
 		{
-			input[0] = rand(gen);
+			const int sample_idx = rand_idx(gen);
+			for (int z = 0; z < 20; z++)
+				input[z] = table[sample_idx + z];
+
 			model.Forward();
 
 			std::vector<float> target(1);
-			target[0] = sigmoid_1(input[0]);
+			target[0] = table[sample_idx + 20];
 			model.ComputeError(target);
 
 			/* cout << "input : " << input[0] << ", result : ";
@@ -66,33 +76,27 @@ int main()
 				cout << itr << ", ";
 			}
 			cout << std::endl;*/
-			result_list[i % 100] = (model.GetResult()[0] / target[0]) * 100;
-			//cout << (model.GetResult()[0] / target[0]) * 100 << '%' << endl;
+			result_list[i % 10000] = (model.GetResult()[0] - target[0]);
 		}
-		if (i % 100 == 0)
+		if (i % 1000 == 0)
 		{
-			if (i % 1000 == 0)
+			model.Optimize();
+
+			if (i % 10000 == 0)
 			{
-				double sum = 0;
-				for (int j = 0; j < 100; j++)
-					sum += result_list[j];
+				float sum = 0;
+				for (int i = 0; i < 10000; i++)
+					sum += result_list[i];
+
 				cout.precision(5);
 				cout << fixed;
-				cout << "Error_rate : " << setw(10) << 100 - (sum / 100) << '%' << endl;
+				cout << setw(12) << (sum / 10000) << '.' << endl;
+				static double vec[100000];
+				vec[i / 10000] = sum;
 			}
-			model.Optimize();
 		}
 	}
 
-	//timeStart();
-	//model.Forward();
-	//timeEnd();
-	//timePrint();
-
-	//for (float itr : model.GetResult())
-	//{
-	//	cout << itr;
-	//}
-
 	return 0;
 }
+#endif
