@@ -14,6 +14,21 @@ namespace rian
 		}
 	}
 
+	void Model::Build()
+	{
+#ifdef GPGPU
+		for (int layer_idx = 0; layer_idx < layers.size() - 1; layer_idx++)
+		{
+			Layer& src_layer = layers[layer_idx];
+			Weights& now_weight = weight[layer_idx];
+			Layer& dest_layer = layers[(size_t)layer_idx + 1];
+
+			gpu_weight.push_back(
+				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.v.data()));
+		}
+#endif
+	}
+
 	std::vector<float>& Model::GetInputVector()
 	{
 		return layers.begin()->result;

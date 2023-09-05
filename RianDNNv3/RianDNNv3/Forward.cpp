@@ -1,19 +1,6 @@
 #include "RianDNN.h"
 #include <algorithm>
 
-/* C++ AMP
-	 not supported after VS2022 */
-//#define GPGPU
-#ifdef GPGPU
-#include <amp.h>
-using namespace concurrency;
-#endif
-
-/* C++ OpenMP
-	support Multi-thread */
-#pragma warning(disable:6993)
-#include <omp.h>
-
 namespace rian
 {
 	void Model::Forward()
@@ -25,12 +12,18 @@ namespace rian
 			Layer& dest_layer = layers[(size_t)layer_idx + 1];
 
 			// compute weight
-#ifdef GPGPU //(Not Implemented yet)
+#ifdef GPGPU
+			//array_view<float, 1> in(src_layer.size, src_layer.result.data());
+			//array_view<float, 2> w(src_layer.size, dest_layer.size, now_weight.v.data());
+			//array_view<float, 1> out(dest_layer.size, dest_layer.result.data());
+			//out.discard_data();
+			
+			array_view<float, 2>& w = *gpu_weight[layer_idx];
 			array_view<float, 1> in(src_layer.size, src_layer.result.data());
-			array_view<float, 2> w(src_layer.size, dest_layer.size, now_weight.v.data());
 			array_view<float, 1> out(dest_layer.size, dest_layer.result.data());
 			out.discard_data();
 
+			// calculate weight multiply
 			const int src_size = src_layer.size;
 			parallel_for_each(
 				out.extent,
@@ -45,8 +38,37 @@ namespace rian
 			);
 			out.synchronize();
 
+			for (int out_i = 0; out_i < dest_layer.size; out_i++)
+			{
+				// compute bias & act_func
+				dest_layer.result[out_i] += dest_layer.bias[out_i];
+
+				// compute activation function & derivative
+				switch (dest_layer.act)
+				{
+				case Activation::ReLU:
+					if (dest_layer.result[out_i] > 0)
+						dest_layer.actDiffSum[out_i] += 1;
+					else
+						dest_layer.result[out_i] = 0;
+					break;
+				case Activation::LeakyReLU:
+					if (dest_layer.result[out_i] > 0)
+						dest_layer.actDiffSum[out_i] += 1;
+					else
+					{
+						dest_layer.result[out_i] *= 0.01f;
+						dest_layer.actDiffSum[out_i] += 0.01f;
+					}
+					break;
+				case Activation::None:
+					dest_layer.actDiffSum[out_i] += 1;
+					break;
+				}
+			}
+
 #else // ONLY CPU
-//#pragma omp parallel for
+#pragma omp parallel for
 			for (int out_i = 0; out_i < dest_layer.size; out_i++)
 			{
 				// calculate weight
@@ -90,7 +112,8 @@ namespace rian
 #ifndef ONLY_FORWARD
 			for (int i = 0; i < src_layer.size; i++)
 			{
-				src_layer.forwardSum[i] += src_layer.result[i];
+				//src_layer.forwardSum[i] += src_layer.result[i];
+				src_layer.forwardSum[i] += src_layer.result[i] * src_layer.result[i];
 			}
 #endif
 		}

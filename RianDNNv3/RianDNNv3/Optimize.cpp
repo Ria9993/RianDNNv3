@@ -43,7 +43,8 @@ namespace rian
 						* (layer.forwardSum[i] / forwardCount);
 
 					// stacking derivative
-					layer.backprop[i] += weight[layer_idx].v[idx_2d];
+					//layer.backprop[i] += weight[layer_idx].v[idx_2d];
+					layer.backprop[i] += weight[layer_idx].v[idx_2d] * frontLayer.backprop[front_idx];
 
 					weight[layer_idx].momentum[idx_2d] =
 						(weight[layer_idx].momentum[idx_2d] * hyperParm.MomentumRate)
@@ -53,9 +54,22 @@ namespace rian
 				// get average of derivative, for prevent gradient exploding in deep layer 
 				//layer.backprop[i] /= frontLayer.size;
 				
-				layer.backprop[i] = (layer.backprop[i] / forwardCount) * (layer.actDiffSum[i] / forwardCount);
+				//layer.backprop[i] = (layer.backprop[i] / forwardCount) * (layer.actDiffSum[i] / forwardCount);
+				layer.backprop[i] *= (layer.actDiffSum[i] / forwardCount);
 			}
 		}
+
+#ifdef GPGPU
+		for (int layer_idx = 0; layer_idx < layers.size() - 1; layer_idx++)
+		{
+			Layer& src_layer = layers[layer_idx];
+			Weights& now_weight = weight[layer_idx];
+			Layer& dest_layer = layers[(size_t)layer_idx + 1];
+
+			array_view<float, 2>updated_weight(src_layer.size, dest_layer.size, now_weight.v.data());
+			updated_weight.copy_to(*gpu_weight[layer_idx]);
+		}
+#endif
 
 		// clear gradient
 		for (int i = 0; i < layers.size(); i++)
@@ -73,7 +87,7 @@ namespace rian
 		forwardCount = 0;
 		errorComputeCount = 0;
 
-		hyperParm.LearningRate *= 0.999f;
+		//hyperParm.LearningRate *= 0.999f;
 		//std::cout.precision(10);
 		//std::cout << "lr = " << hyperParm.LearningRate << std::endl;
 	}
