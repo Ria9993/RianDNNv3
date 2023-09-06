@@ -33,6 +33,7 @@ namespace rian
 			}
 
 			// pull frontLayer's derivative and weight update
+#pragma omp parallel for
 			for (int i = 0; i < layer.size; i++)
 			{
 				for (int front_idx = 0; front_idx < frontLayer.size; front_idx++)
