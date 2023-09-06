@@ -2,7 +2,7 @@
 Just simple neural-network library  
 ### blog post  
 <https://ria9993.github.io/cs/2022/10/14/intro-neural-network-learning.html>
-## Support Feature
+## Feature Support
 - **GPGPU**  
  (By default it is disabled, to enable it you need to define "GPGPU" in the RianDNN.h file)
 - **Multi-Thread**  
