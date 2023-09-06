@@ -7,6 +7,8 @@ Just simple neural-network library
  (By default it is disabled, to enable it you need to define "GPGPU" in the RianDNN.h file)
 - **Multi-Thread**  
  (By default it is enabled)
+## Preview AutoEncoder Test
+https://github.com/Ria9993/RianDNNv3/assets/44316628/2c675696-bb14-4d1d-8a11-3372584cb6ce  
 ## Exmaple
 ### Learning Sigmoid(x)
 ```cpp
