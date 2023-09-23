@@ -25,6 +25,9 @@ namespace rian
 
 			gpu_weight.push_back(
 				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.v.data()));
+
+			gpu_weight_momentum.push_back(
+				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.momentum.data()));
 		}
 #endif
 	}

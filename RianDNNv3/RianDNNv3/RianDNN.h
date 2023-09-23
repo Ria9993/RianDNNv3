@@ -11,7 +11,7 @@
 	C++ AMP
 	not supported after VS2019 */
 
-//#define GPGPU
+#define GPGPU
 #ifdef GPGPU
 #include <amp.h>
 using namespace concurrency;
@@ -56,6 +56,7 @@ namespace rian
 		/* GPGPU */
 #ifdef GPGPU
 		std::vector<array_view<float, 2>*> gpu_weight;
+		std::vector<array_view<float, 2>*> gpu_weight_momentum;
 #endif
 	};
 }

@@ -44,7 +44,7 @@ namespace rian
 				frontLayer.backprop[i] = max(frontLayer.backprop[i], -clip_threshold);
 			}
 
-#ifndef GPGPU
+#if 0
 			// pull frontLayer's derivative and weight update
 #pragma omp parallel for
 			for (int i = 0; i < layer.size; i++)
@@ -73,12 +73,13 @@ namespace rian
 			const int layer_size = layer.size;
 			const int front_size = frontLayer.size;
 			array_view<float, 2>& w = *gpu_weight[layer_idx];
-			array_view<float, 2> w_momentum(layer_size, front_size, weight[layer_idx].momentum.data());
+			array_view<float, 2>& w_momentum = *gpu_weight_momentum[layer_idx];
 			array_view<float, 1> backprop(layer_size, layer.backprop.data());
 			array_view<float, 1> front_backprop(front_size, frontLayer.backprop.data());
-			array_view<float, 1> actDiffSum(layer_size, layer.actDiffSum.data());
 			array_view<float, 1> forwardSum(layer_size, layer.forwardSum.data());
 			backprop.discard_data();
+			w.discard_data();
+			w_momentum.discard_data();
 
 			const float learningRate = hyperParm.LearningRate;
 			const float momentumRate = hyperParm.MomentumRate;
@@ -105,8 +106,8 @@ namespace rian
 					}
 				}
 			);
-			w.synchronize();
-			w_momentum.synchronize();
+			//w.synchronize();
+			//w_momentum.synchronize();
 			backprop.synchronize();
 			for (int i = 0; i < layer_size; i++)
 			{
