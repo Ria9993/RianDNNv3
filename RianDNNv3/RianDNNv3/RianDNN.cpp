@@ -14,6 +14,21 @@ namespace rian
 		}
 	}
 
+	void Model::Build()
+	{
+#ifdef GPGPU
+		for (int layer_idx = 0; layer_idx < layers.size() - 1; layer_idx++)
+		{
+			Layer& src_layer = layers[layer_idx];
+			Weights& now_weight = weight[layer_idx];
+			Layer& dest_layer = layers[(size_t)layer_idx + 1];
+
+			gpu_weight.push_back(
+				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.v.data()));
+		}
+#endif
+	}
+
 	std::vector<float>& Model::GetInputVector()
 	{
 		return layers.begin()->result;
@@ -27,16 +42,20 @@ namespace rian
 
 	void Model::ComputeError(const std::vector<float>& target)
 	{
+		float grad_sum = 0;
+		
 		Layer& outLayer = layers[layers.size() - 1];
 		for (int i = 0; i < outLayer.size; i++)
-		{
-			outLayer.backprop[i] += 2 * (outLayer.result[i] - target[i]);
-			
-			//float error = (outLayer.result[i] - target[i]) * (outLayer.result[i] - target[i]);
-			//if ((outLayer.result[i] - target[i]) < 0)
-			//	error = -error;
+		{			
+			float grad = 2 * (outLayer.result[i] - target[i]);
+			grad_sum += abs(grad);
+		}
 
-			//outLayer.backprop[i] += error;
+		// Compute derivative about mean error
+		for (int i = 0; i < outLayer.size; i++)
+		{
+			float grad = 2 * (outLayer.result[i] - target[i]);
+			outLayer.backprop[i] += grad * (abs(grad) / grad_sum);
 		}
 
 		// counting for case of many forward but only errorCompute once
