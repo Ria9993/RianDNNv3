@@ -9,6 +9,7 @@ namespace rian
 	{
 	public:
 		Layer(int size, Activation act, float biasInit);
+		//~Layer() = default;
 		
 		int size;
 

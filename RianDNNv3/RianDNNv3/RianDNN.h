@@ -2,16 +2,16 @@
 
 #include <algorithm>
 #include <vector>
-#include "HyperParm.h"
 #include "Layer.h"
 #include "Weights.h"
 #include "Activation.h"
+#include "HyperParm.h"
 
 /* If you want enable GPGPU, define [#define GPGPU] 
 	C++ AMP
 	not supported after VS2019 */
 
-#define GPGPU
+//#define GPGPU
 #ifdef GPGPU
 #include <amp.h>
 using namespace concurrency;
@@ -27,12 +27,18 @@ namespace rian
 	class Model
 	{
 	public:
+		Model()
+		{
+			this->forwardCount = 0;
+			this->errorComputeCount = 0;
+		}
 		Model(HyperParm hyperParm)
 		{
 			this->hyperParm = hyperParm;
 			this->forwardCount = 0;
 			this->errorComputeCount = 0;
 		}
+		~Model();
 
 		void AddLayer(int size, Activation act);
 		void Build();

@@ -7,7 +7,7 @@ namespace rian
 	class Weights
 	{
 	public:
-		//Weights() = delete;
+		Weights() = delete;
 		Weights(int srcSize, int destSize);
 
 		// using by 2d

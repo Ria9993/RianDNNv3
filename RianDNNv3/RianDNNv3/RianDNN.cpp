@@ -2,6 +2,14 @@
 
 namespace rian
 {
+	Model::~Model()
+	{
+#ifdef GPGPU
+		for (size_t i = 0; i < gpu_weight.size(); i++)
+			delete gpu_weight[i];
+#endif
+	}
+
 	void Model::AddLayer(int size, Activation act)
 	{
 		layers.emplace_back(size, act, hyperParm.BiasInitValue);
@@ -26,8 +34,8 @@ namespace rian
 			gpu_weight.push_back(
 				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.v.data()));
 
-			gpu_weight_momentum.push_back(
-				new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.momentum.data()));
+			//gpu_weight_momentum.push_back(
+			//	new array_view<float, 2>(src_layer.size, dest_layer.size, now_weight.momentum.data()));
 		}
 #endif
 	}
