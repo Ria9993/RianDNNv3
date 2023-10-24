@@ -8,7 +8,9 @@ Just simple neural-network library
  (CAUTION : GPGPU doesn't work in convolution layers)  
 - **Multi-Thread**  
  (By default it is enabled)
-- **Convolution 1D Layer**
+- **Layer**  
+  Convolution 1D Layer  
+  Dense Layer  
 ## Preview AutoEncoder Test
 https://github.com/Ria9993/RianDNNv3/assets/44316628/2c675696-bb14-4d1d-8a11-3372584cb6ce  
 ## Exmaple
