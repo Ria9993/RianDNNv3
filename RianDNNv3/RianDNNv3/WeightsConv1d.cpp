@@ -10,8 +10,12 @@ namespace rian
 			dest_layer.result[out_i] = 0;
 			for (int kernel_i = 0; kernel_i < kernelSize; kernel_i++)
 			{
-				int src_i = out_i * stride + kernel_i;
-				dest_layer.result[out_i] += src_layer.result[src_i] * v[kernel_i];
+				int src_i = (out_i * stride + kernel_i) - (kernelSize / 2);
+
+				if (src_i < 0 || src_layer.size <= src_i)
+					continue;
+				else
+					dest_layer.result[out_i] += src_layer.result[src_i] * v[kernel_i];
 			}
 		}
 	}
@@ -24,13 +28,14 @@ namespace rian
 #pragma omp parallel for 
 		for (int i = 0; i < layer.size; i++)
 		{
-			for (int kernel_i = i % stride; kernel_i < kernelSize; kernel_i += stride)
+			for (int kernel_i = (i + (kernelSize / 2)) % stride; kernel_i < kernelSize; kernel_i += stride)
 			{
-				if (i - kernel_i < 0)
+				const int front_idx = ((i + (kernelSize / 2)) - kernel_i) / stride;
+				if (((i + (kernelSize / 2)) - kernel_i) < 0)
 					break;
-				const int front_idx = (i - kernel_i) / stride;
 				if (front_idx >= frontLayer.size)
 					continue;
+
 
 				// stacking derivative
 				layer.backprop[i] += v[kernel_i] * frontLayer.backprop[front_idx];

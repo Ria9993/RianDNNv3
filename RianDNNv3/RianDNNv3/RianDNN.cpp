@@ -33,8 +33,8 @@ namespace rian
 		//assert(layers[layers.size() - 1].size % stride == 0
 		//	&& (layers[layers.size() - 1].size - kernelSize) % stride == 0);
 
-		int layerSize = ((layers[layers.size() - 1].size - kernelSize) / stride) + 1;
-		//int layerSize = (layers[layers.size() - 1].size / stride);
+		//int layerSize = ((layers[layers.size() - 1].size - kernelSize) / stride) + 1;
+		int layerSize = ((layers[layers.size() - 1].size + (2 * (kernelSize / 2))) / stride);
 		layers.emplace_back(layerSize, act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
