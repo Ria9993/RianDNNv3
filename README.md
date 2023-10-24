@@ -4,9 +4,11 @@ Just simple neural-network library
 <https://ria9993.github.io/cs/2022/10/14/intro-neural-network-learning.html>
 ## Feature Support
 - **GPGPU**  
- (By default it is disabled, to enable it you need to define "GPGPU" in the RianDNN.h file)
+ (By default it is disabled, to enable it you need to define "GPGPU" in the RianDNN.h file)  
+ (CAUTION : GPGPU doesn't work in convolution layers)  
 - **Multi-Thread**  
  (By default it is enabled)
+- **Convolution 1D Layer**
 ## Preview AutoEncoder Test
 https://github.com/Ria9993/RianDNNv3/assets/44316628/2c675696-bb14-4d1d-8a11-3372584cb6ce  
 ## Exmaple

@@ -22,7 +22,3 @@ void timePrint()
 	cout << static_cast<nanoseconds>(endTime - startTime).count() << "ns" << endl;
 
 }
-namespace rian
-{
-
-}

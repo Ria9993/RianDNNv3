@@ -134,11 +134,16 @@
     <ClCompile Include="Optimize.cpp" />
     <ClCompile Include="Forward.cpp" />
     <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="WeightsConv1d.cpp" />
+    <ClCompile Include="WeightsDense.cpp" />
+    <ClInclude Include="WeightsConv1d.h" />
+    <ClInclude Include="WeightsDense.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RianDNN.cpp" />
     <ClCompile Include="Sequential_data_test_main.cpp" />
     <ClCompile Include="Weights.cpp" />
-    <ClCompile Include="Weights.h" />
+    <ClInclude Include="Weights.h" />
+    <ClInclude Include="WeightsUpsample.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activation.h" />

@@ -19,6 +19,7 @@ namespace rian
 		{
 			outLayer.backprop[i] /= errorComputeCount;
 			outLayer.backprop[i] *= (outLayer.actDiffSum[i] / forwardCount);
+			//outLayer.backprop[i] *= (outLayer.actDiffSum[i]);
 		}
 
 		// backprop & update
@@ -27,6 +28,14 @@ namespace rian
 			Layer& layer = layers[layer_idx];
 			Layer& frontLayer = layers[(size_t)layer_idx + 1];
 
+			// Gradient clipping as
+			const float clip_threshold = 5.f;
+			for (int i = 0; i < frontLayer.size; i++)
+			{
+				//frontLayer.backprop[i] = min(frontLayer.backprop[i], clip_threshold);
+				//frontLayer.backprop[i] = max(frontLayer.backprop[i], -clip_threshold);
+			}
+			
 			// frontLayer bias update
 			for (int i = 0; i < frontLayer.size; i++)
 			{
@@ -36,36 +45,22 @@ namespace rian
 				frontLayer.bias[i] += frontLayer.biasMomentum[i];
 			}
 
-			// Gradient clipping as
-			const float clip_threshold = 2.f;
-			for (int i = 0; i < frontLayer.size; i++)
+
+			for (int i = 0; i < layer.size; i++)
 			{
-				//frontLayer.backprop[i] = min(frontLayer.backprop[i], clip_threshold);
-				//frontLayer.backprop[i] = max(frontLayer.backprop[i], -clip_threshold);
+				layer.forwardSum[i] /= forwardCount;
 			}
 
 			// pull frontLayer's derivative and weight update
-#pragma omp parallel for
-			for (int i = 0; i < layer.size; i++)\
-			{
-				for (int front_idx = 0; front_idx < frontLayer.size; front_idx++)
-				{
-					const size_t idx_2d = (size_t)i * frontLayer.size + front_idx;
-					const float grad =
-						(frontLayer.backprop[front_idx])
-						* (layer.forwardSum[i] / forwardCount);
-
-					// stacking derivative
-					layer.backprop[i] += weight[layer_idx].v[idx_2d] * frontLayer.backprop[front_idx];
-
-					weight[layer_idx].momentum[idx_2d] =
-						(weight[layer_idx].momentum[idx_2d] * hyperParm.MomentumRate)
-						- (hyperParm.LearningRate * grad);
-					weight[layer_idx].v[idx_2d] += weight[layer_idx].momentum[idx_2d];
-
-				}				
+			weight[layer_idx]->Backprop(layer, frontLayer, hyperParm);
+			for (int i = 0; i < layer.size; i++)
+			{		
 				//layer.backprop[i] = (layer.backprop[i] / forwardCount) * (layer.actDiffSum[i] / forwardCount);
 				layer.backprop[i] *= (layer.actDiffSum[i] / forwardCount);
+				//layer.backprop[i] *= (layer.actDiffSum[i]);
+				
+				//layer.backprop[i] = min(layer.backprop[i], clip_threshold);
+				//layer.backprop[i] = max(layer.backprop[i], -clip_threshold);
 			}
 		}
 

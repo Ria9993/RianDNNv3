@@ -8,17 +8,39 @@ namespace rian
 		for (size_t i = 0; i < gpu_weight.size(); i++)
 			delete gpu_weight[i];
 #endif
+		for (size_t i = 0; i < weight.size(); i++)
+			delete weight[i];
 	}
 
 	void Model::AddLayer(int size, Activation act)
+	{
+		AddLayerDense(size, act);
+	}
+
+	void Model::AddLayerDense(int size, Activation act)
 	{
 		layers.emplace_back(size, act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
 		if (layersSize > 1)
 		{
-			Weights newWeights(layers[layersSize - 2].size, layers[layersSize - 1].size);
-			weight.push_back(newWeights);
+			weight.push_back(new WeightsDense(layers[layersSize - 2].size, layers[layersSize - 1].size));
+		}
+	}
+
+	void Model::AddLayerConv1d(int kernelSize, int stride, Activation act)
+	{
+		//assert(layers[layers.size() - 1].size % stride == 0
+		//	&& (layers[layers.size() - 1].size - kernelSize) % stride == 0);
+
+		int layerSize = ((layers[layers.size() - 1].size - kernelSize) / stride) + 1;
+		//int layerSize = (layers[layers.size() - 1].size / stride);
+		layers.emplace_back(layerSize, act, hyperParm.BiasInitValue);
+
+		size_t layersSize = layers.size();
+		if (layersSize > 1)
+		{
+			weight.push_back(new WeightsConv1d(layers[layers.size() - 2].size, layers[layers.size() - 1].size, kernelSize, stride));
 		}
 	}
 
@@ -66,7 +88,8 @@ namespace rian
 		for (int i = 0; i < outLayer.size; i++)
 		{
 			float grad = 2 * (outLayer.result[i] - target[i]);
-			outLayer.backprop[i] += grad * (abs(grad) / grad_sum);
+			//outLayer.backprop[i] += grad * (abs(grad) / grad_sum);
+			outLayer.backprop[i] += grad;
 		}
 
 		// counting for case of many forward but only errorCompute once

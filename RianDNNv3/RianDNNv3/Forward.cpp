@@ -8,7 +8,7 @@ namespace rian
 		for (int layer_idx = 0; layer_idx < layers.size() - 1; layer_idx++)
 		{
 			Layer& src_layer = layers[layer_idx];
-			Weights& now_weight = weight[layer_idx];
+			Weights& now_weight = *weight[layer_idx];
 			Layer& dest_layer = layers[(size_t)layer_idx + 1];
 
 			// compute weight
@@ -68,18 +68,13 @@ namespace rian
 			}
 
 #else // ONLY CPU
+
+			// calculate weight
+			now_weight.Forward(src_layer, dest_layer);
+
 #pragma omp parallel for
 			for (int out_i = 0; out_i < dest_layer.size; out_i++)
 			{
-				// calculate weight
-				dest_layer.result[out_i] = 0;
-				for (int src_i = 0; src_i < src_layer.size; src_i++)
-				{
-					const size_t idx_2d = (size_t)src_i * dest_layer.size + out_i;
-
-					dest_layer.result[out_i] += src_layer.result[src_i] * now_weight.v[idx_2d];
-				}
-
 				// compute bias & act_func
 				dest_layer.result[out_i] += dest_layer.bias[out_i];
 

@@ -15,12 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Weights.h">
-      <Filter>RianDNN</Filter>
-    </ClCompile>
     <ClCompile Include="RianDNN.cpp">
       <Filter>RianDNN</Filter>
     </ClCompile>
@@ -39,6 +33,15 @@
     <ClCompile Include="Sequential_data_test_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="WeightsDense.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
+    <ClCompile Include="WeightsConv1d.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RianDNN.h">
@@ -54,6 +57,18 @@
       <Filter>RianDNN</Filter>
     </ClInclude>
     <ClInclude Include="Utility.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="Weights.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightsDense.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightsConv1d.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightsUpsample.h">
       <Filter>RianDNN</Filter>
     </ClInclude>
   </ItemGroup>
