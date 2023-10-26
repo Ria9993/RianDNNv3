@@ -53,7 +53,7 @@ namespace rian
 			}
 
 			// pull frontLayer's derivative and weight update
-			weight[layer_idx]->Backprop(layer, frontLayer, hyperParm);
+			weight[layer_idx]->Backprop(layer, frontLayer, *this);
 			for (int i = 0; i < layer.size; i++)
 			{		
 				//layer.backprop[i] = (layer.backprop[i] / forwardCount) * (layer.actDiffSum[i] / forwardCount);
@@ -64,18 +64,6 @@ namespace rian
 				//layer.backprop[i] = max(layer.backprop[i], -clip_threshold);
 			}
 		}
-
-#ifdef GPGPU
-		for (int layer_idx = 0; layer_idx < layers.size() - 1; layer_idx++)
-		{
-			Layer& src_layer = layers[layer_idx];
-			Weights& now_weight =  *weight[layer_idx];
-			Layer& dest_layer = layers[(size_t)layer_idx + 1];
-
-			array_view<float, 2>updated_weight(src_layer.size, dest_layer.size, now_weight.v.data());
-			updated_weight.copy_to(*gpu_weight[layer_idx]);
-		}
-#endif
 
 		
 		// clear gradient

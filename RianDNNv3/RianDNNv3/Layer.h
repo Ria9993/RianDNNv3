@@ -8,10 +8,11 @@ namespace rian
 	class Layer
 	{
 	public:
-		Layer(int size, Activation act, float biasInit);
+		Layer(int size, int idx, Activation act, float biasInit);
 		//~Layer() = default;
 		
 		int size;
+		int idx;
 
 		std::vector<float> bias;
 		std::vector<float> result;

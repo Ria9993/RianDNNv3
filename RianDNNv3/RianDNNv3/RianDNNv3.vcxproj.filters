@@ -68,8 +68,5 @@
     <ClInclude Include="WeightsConv1d.h">
       <Filter>RianDNN</Filter>
     </ClInclude>
-    <ClInclude Include="WeightsUpsample.h">
-      <Filter>RianDNN</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

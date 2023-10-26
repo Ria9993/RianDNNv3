@@ -143,7 +143,6 @@
     <ClCompile Include="Sequential_data_test_main.cpp" />
     <ClCompile Include="Weights.cpp" />
     <ClInclude Include="Weights.h" />
-    <ClInclude Include="WeightsUpsample.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activation.h" />

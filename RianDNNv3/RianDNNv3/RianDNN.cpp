@@ -2,6 +2,19 @@
 
 namespace rian
 {
+	Model::Model()
+	{
+		this->forwardCount = 0;
+		this->errorComputeCount = 0;
+	}
+
+	Model::Model(HyperParm hyperParm)
+	{
+		this->hyperParm = hyperParm;
+		this->forwardCount = 0;
+		this->errorComputeCount = 0;
+	}
+
 	Model::~Model()
 	{
 #ifdef GPGPU
@@ -19,7 +32,7 @@ namespace rian
 
 	void Model::AddLayerDense(int size, Activation act)
 	{
-		layers.emplace_back(size, act, hyperParm.BiasInitValue);
+		layers.emplace_back(size, layers.size(), act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
 		if (layersSize > 1)
@@ -35,7 +48,7 @@ namespace rian
 
 		//int layerSize = ((layers[layers.size() - 1].size - kernelSize) / stride) + 1;
 		int layerSize = ((layers[layers.size() - 1].size + (2 * (kernelSize / 2))) / stride);
-		layers.emplace_back(layerSize, act, hyperParm.BiasInitValue);
+		layers.emplace_back(layerSize, layers.size(), act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
 		if (layersSize > 1)

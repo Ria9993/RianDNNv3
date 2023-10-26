@@ -1,9 +1,16 @@
 #include "WeightsDense.h"
+#include "RianDNN.h"
 
 namespace rian
 {
-	void WeightsDense::Forward(Layer& src_layer, Layer& dest_layer)
+	WeightsDense::WeightsDense(int srcSize, int destSize)
+		: Weights(srcSize, destSize)
 	{
+	}
+
+	void WeightsDense::Forward(Layer& src_layer, Layer& dest_layer, Model& model)
+	{
+#ifndef GPGPU
 #pragma omp parallel for
 		for (int out_i = 0; out_i < dest_layer.size; out_i++)
 		{
@@ -15,9 +22,36 @@ namespace rian
 				dest_layer.result[out_i] += src_layer.result[src_i] * v[idx_2d];
 			}
 		}
+
+#else
+		//array_view<float, 1> in(src_layer.size, src_layer.result.data());
+		//array_view<float, 2> w(src_layer.size, dest_layer.size, now_weight.v.data());
+		//array_view<float, 1> out(dest_layer.size, dest_layer.result.data());
+		//out.discard_data();
+
+		array_view<float, 2>& w = *model.gpu_weight[src_layer.idx];
+		array_view<float, 1> in(src_layer.size, src_layer.result.data());
+		array_view<float, 1> out(dest_layer.size, dest_layer.result.data());
+		out.discard_data();
+
+		// calculate weight multiply
+		const int src_size = src_layer.size;
+		parallel_for_each(
+			out.extent,
+			[=](index<1> idx) restrict(amp)
+			{
+				out[idx] = 0;
+				for (int src_i = 0; src_i < src_size; src_i++)
+				{
+					out[idx] += in[src_i] * w[src_i][idx];
+				}
+			}
+		);
+		out.synchronize();
+#endif
 	}
 
-	void WeightsDense::Backprop(Layer& layer, Layer& frontLayer, HyperParm& hyperParm)
+	void WeightsDense::Backprop(Layer& layer, Layer& frontLayer, Model& model)
 	{
 #pragma omp parallel for
 		for (int i = 0; i < layer.size; i++)
@@ -32,11 +66,16 @@ namespace rian
 				layer.backprop[i] += v[idx_2d] * frontLayer.backprop[front_idx];
 
 				momentum[idx_2d] =
-					(momentum[idx_2d] * hyperParm.MomentumRate)
-					- (hyperParm.LearningRate * grad);
+					(momentum[idx_2d] * model.hyperParm.MomentumRate)
+					- (model.hyperParm.LearningRate * grad);
 				v[idx_2d] += momentum[idx_2d];
 
 			}
 		}
+#ifdef GPGPU
+		array_view<float, 2>updated_weight(layer.size, frontLayer.size, v.data());
+		updated_weight.copy_to(*model.gpu_weight[layer.idx]);
+#endif
 	}
+
 }

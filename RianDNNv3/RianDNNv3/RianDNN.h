@@ -14,7 +14,7 @@
 	C++ AMP
 	not supported after VS2019 */
 
-//#define GPGPU
+#define GPGPU
 #ifdef GPGPU
 #include <amp.h>
 using namespace concurrency;
@@ -30,17 +30,8 @@ namespace rian
 	class Model
 	{
 	public:
-		Model()
-		{
-			this->forwardCount = 0;
-			this->errorComputeCount = 0;
-		}
-		Model(HyperParm hyperParm)
-		{
-			this->hyperParm = hyperParm;
-			this->forwardCount = 0;
-			this->errorComputeCount = 0;
-		}
+		Model();
+		Model(HyperParm hyperParm);
 		~Model();
 
 		void AddLayer(int size, Activation act);

@@ -1,8 +1,18 @@
 #include "WeightsConv1d.h"
+#include "RianDNN.h"
 
 namespace rian
 {
-	void WeightsConv1d::Forward(Layer& src_layer, Layer& dest_layer)
+
+	WeightsConv1d::WeightsConv1d(int srcSize, int destSize, int kernelSize0, int stride0)
+		: Weights(kernelSize0, 1)
+		, kernelSize(kernelSize0)
+		, stride(stride0)
+	{
+		sum_grad_v.resize(kernelSize0);
+	}
+
+	void WeightsConv1d::Forward(Layer& src_layer, Layer& dest_layer, Model& model)
 	{
 #pragma omp parallel for
 		for (int out_i = 0; out_i < dest_layer.size; out_i++)
@@ -20,7 +30,7 @@ namespace rian
 		}
 	}
 
-	void WeightsConv1d::Backprop(Layer& layer, Layer& frontLayer, HyperParm& hyperParm)
+	void WeightsConv1d::Backprop(Layer& layer, Layer& frontLayer, Model& model)
 	{
 		for (int i = 0; i < kernelSize; i++)
 			sum_grad_v[i] = 0.f;
@@ -50,8 +60,8 @@ namespace rian
 		for (int i = 0; i < kernelSize; i++)
 		{
 			momentum[i] =
-				(momentum[i] * hyperParm.MomentumRate)
-				- (hyperParm.LearningRate * sum_grad_v[i]);
+				(momentum[i] * model.hyperParm.MomentumRate)
+				- (model.hyperParm.LearningRate * sum_grad_v[i]);
 			v[i] += momentum[i];
 		}
 	}
