@@ -47,13 +47,25 @@ namespace rian
 		//	&& (layers[layers.size() - 1].size - kernelSize) % stride == 0);
 
 		//int layerSize = ((layers[layers.size() - 1].size - kernelSize) / stride) + 1;
-		int layerSize = ((layers[layers.size() - 1].size + (2 * (kernelSize / 2))) / stride);
+		int layerSize = (layers[layers.size() - 1].size / stride);
 		layers.emplace_back(layerSize, layers.size(), act, hyperParm.BiasInitValue);
 
 		size_t layersSize = layers.size();
 		if (layersSize > 1)
 		{
 			weight.push_back(new WeightsConv1d(layers[layers.size() - 2].size, layers[layers.size() - 1].size, kernelSize, stride));
+		}
+	}
+
+	void Model::AddLayerTransConv1d(int kernelSize, int stride, Activation act)
+	{
+		int layerSize = (layers[layers.size() - 1].size * stride);
+		layers.emplace_back(layerSize, layers.size(), act, hyperParm.BiasInitValue);
+
+		size_t layersSize = layers.size();
+		if (layersSize > 1)
+		{
+			weight.push_back(new WeightsTransConv1d(layers[layers.size() - 2].size, layers[layers.size() - 1].size, kernelSize, stride));
 		}
 	}
 

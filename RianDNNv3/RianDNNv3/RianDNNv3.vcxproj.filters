@@ -42,6 +42,9 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="WeightsTransConv1d.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RianDNN.h">
@@ -66,6 +69,9 @@
       <Filter>RianDNN</Filter>
     </ClInclude>
     <ClInclude Include="WeightsConv1d.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightsTransConv1d.h">
       <Filter>RianDNN</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@
 #include "HyperParm.h"
 #include "WeightsDense.h"
 #include "WeightsConv1d.h"
+#include "WeightsTransConv1d.h"
 
 /* If you want enable GPGPU, define [#define GPGPU] 
 	C++ AMP
@@ -37,6 +38,7 @@ namespace rian
 		void AddLayer(int size, Activation act);
 		void AddLayerDense(int size, Activation act);
 		void AddLayerConv1d(int kernelSize, int stride, Activation act);
+		void AddLayerTransConv1d(int kernelSize, int stride, Activation act);
 		void Build();
 		std::vector<float>& GetInputVector();
 		void Forward();

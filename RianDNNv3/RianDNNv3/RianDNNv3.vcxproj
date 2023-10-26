@@ -136,6 +136,7 @@
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="WeightsConv1d.cpp" />
     <ClCompile Include="WeightsDense.cpp" />
+    <ClCompile Include="WeightsTransConv1d.cpp" />
     <ClInclude Include="WeightsConv1d.h" />
     <ClInclude Include="WeightsDense.h" />
     <ClCompile Include="main.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="Sequential_data_test_main.cpp" />
     <ClCompile Include="Weights.cpp" />
     <ClInclude Include="Weights.h" />
+    <ClInclude Include="WeightsTransConv1d.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Activation.h" />
