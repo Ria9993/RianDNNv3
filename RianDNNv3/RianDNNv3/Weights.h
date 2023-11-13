@@ -12,9 +12,10 @@ namespace rian
 	class Weights
 	{
 	public:
-		Weights() = delete;
+		Weights() = default;
 		Weights(int srcSize, int destSize);
 		Weights(int srcSize, int destSize, float std);
+		Weights(int srcSize, int destSize, float uniformMin, float uniformMax);
 
 		virtual void Forward(Layer& src_layer, Layer& dest_layer, Model& model) = 0;
 		virtual void Backprop(Layer& layer, Layer& frontLayer, Model& model) = 0;

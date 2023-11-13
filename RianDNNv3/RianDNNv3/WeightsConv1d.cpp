@@ -3,12 +3,12 @@
 
 namespace rian
 {
-
 	WeightsConv1d::WeightsConv1d(int srcSize, int destSize, int kernelSize0, int stride0)
-		: Weights(kernelSize0, 1)
+		: Weights(kernelSize0, 1, sqrtf((float)2 / (srcSize, destSize)))
 		, kernelSize(kernelSize0)
 		, stride(stride0)
 	{
+		//v[kernelSize / 2] = 1.f;
 		sum_grad_v.resize(kernelSize0);
 	}
 

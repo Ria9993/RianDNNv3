@@ -45,6 +45,15 @@
     <ClCompile Include="WeightsTransConv1d.cpp">
       <Filter>RianDNN</Filter>
     </ClCompile>
+    <ClCompile Include="main_autoenc_0.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="WeightsRNN.cpp">
+      <Filter>RianDNN</Filter>
+    </ClCompile>
+    <ClCompile Include="main_autoenc_gpt.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RianDNN.h">
@@ -72,6 +81,9 @@
       <Filter>RianDNN</Filter>
     </ClInclude>
     <ClInclude Include="WeightsTransConv1d.h">
+      <Filter>RianDNN</Filter>
+    </ClInclude>
+    <ClInclude Include="WeightsRNN.h">
       <Filter>RianDNN</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,8 +2,10 @@
 
 namespace rian
 {
-	Layer::Layer(int size, int idx, Activation act, float biasInit)
+	Layer::Layer(LayerType type, int size, int idx, Activation act, float biasInit)
 	{
+		this->type = type;
+
 		this->size = size;
 		this->act = act;
 		this->idx = idx;

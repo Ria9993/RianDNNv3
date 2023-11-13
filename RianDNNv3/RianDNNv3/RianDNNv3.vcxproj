@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -76,6 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -90,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,11 +133,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main_autoenc_0.cpp" />
+    <ClCompile Include="main_autoenc_gpt.cpp" />
     <ClCompile Include="Optimize.cpp" />
     <ClCompile Include="Forward.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="WeightsConv1d.cpp" />
     <ClCompile Include="WeightsDense.cpp" />
+    <ClCompile Include="WeightsRNN.cpp" />
     <ClCompile Include="WeightsTransConv1d.cpp" />
     <ClInclude Include="WeightsConv1d.h" />
     <ClInclude Include="WeightsDense.h" />
@@ -144,6 +149,7 @@
     <ClCompile Include="Sequential_data_test_main.cpp" />
     <ClCompile Include="Weights.cpp" />
     <ClInclude Include="Weights.h" />
+    <ClInclude Include="WeightsRNN.h" />
     <ClInclude Include="WeightsTransConv1d.h" />
   </ItemGroup>
   <ItemGroup>

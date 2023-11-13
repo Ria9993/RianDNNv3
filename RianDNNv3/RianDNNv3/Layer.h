@@ -5,10 +5,13 @@
 
 namespace rian
 {
+	enum class LayerType;
+
 	class Layer
 	{
 	public:
-		Layer(int size, int idx, Activation act, float biasInit);
+		Layer() = default;
+		Layer(LayerType type, int size, int idx, Activation act, float biasInit);
 		//~Layer() = default;
 		
 		int size;
@@ -18,6 +21,8 @@ namespace rian
 		std::vector<float> result;
 		Activation act;
 
+		LayerType type;
+
 		// learning data
 #ifndef ONLY_FORWARD
 		std::vector<float> actDiffSum; // activation function derivative
@@ -25,5 +30,14 @@ namespace rian
 		std::vector<float> backprop;
 		std::vector<float> biasMomentum;
 #endif
+	};
+
+	enum class LayerType
+	{
+		Dense,
+		Conv1d,
+		TransConv1d,
+		RNN,
+		LSTM
 	};
 }

@@ -30,11 +30,11 @@ namespace rian
 			Layer& frontLayer = layers[(size_t)layer_idx + 1];
 
 			// Gradient clipping as
-			const float clip_threshold = 5.f;
+			const float clip_threshold = 2.f;
 			for (int i = 0; i < frontLayer.size; i++)
 			{
-				//frontLayer.backprop[i] = min(frontLayer.backprop[i], clip_threshold);
-				//frontLayer.backprop[i] = max(frontLayer.backprop[i], -clip_threshold);
+				frontLayer.backprop[i] = min(frontLayer.backprop[i], clip_threshold);
+				frontLayer.backprop[i] = max(frontLayer.backprop[i], -clip_threshold);
 			}
 			
 			// frontLayer bias update

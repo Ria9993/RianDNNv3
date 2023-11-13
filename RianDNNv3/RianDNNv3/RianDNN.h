@@ -3,6 +3,7 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
+#include <iostream>
 #include "Layer.h"
 #include "Weights.h"
 #include "Activation.h"
@@ -10,12 +11,13 @@
 #include "WeightsDense.h"
 #include "WeightsConv1d.h"
 #include "WeightsTransConv1d.h"
+#include "WeightsRNN.h"
 
 /* If you want enable GPGPU, define [#define GPGPU] 
 	C++ AMP
 	not supported after VS2019 */
 
-#define GPGPU
+//#define GPGPU
 #ifdef GPGPU
 #include <amp.h>
 using namespace concurrency;
@@ -37,6 +39,7 @@ namespace rian
 
 		void AddLayer(int size, Activation act);
 		void AddLayerDense(int size, Activation act);
+		// The size of the previous layer must be a multiple of stride. 
 		void AddLayerConv1d(int kernelSize, int stride, Activation act);
 		void AddLayerTransConv1d(int kernelSize, int stride, Activation act);
 		void Build();
@@ -46,10 +49,15 @@ namespace rian
 		void Optimize();
 		const std::vector<float>& GetResult();
 
+		void Save(const char* filename);
+		void Load(const char* filename);
+
 		HyperParm hyperParm;
 
 		std::vector<Layer> layers;
 		std::vector<Weights*> weight;
+
+		
 
 		// learning data
 #ifndef ONLY_FORWARD

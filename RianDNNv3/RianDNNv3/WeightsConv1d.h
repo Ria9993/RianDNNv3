@@ -7,6 +7,7 @@ namespace rian
 	class WeightsConv1d : public Weights
 	{
 	public:
+		WeightsConv1d() = default;
 		WeightsConv1d(int srcSize, int destSize, int kernelSize0, int stride0);
 		void Forward(Layer& src_layer, Layer& dest_layer, Model& model);
 		void Backprop(Layer& layer, Layer& frontLayer, Model& model);
