@@ -8,6 +8,7 @@ namespace rian
 		float LearningRate;
 		float MomentumRate;
 		float BiasInitValue;
+		float RMSPropRate;
 
 		HyperParm()
 		{
@@ -15,6 +16,7 @@ namespace rian
 			LearningRate = 0.0001f;
 			MomentumRate = 0.9f;
 			BiasInitValue = 0.01f;
+			RMSPropRate = 0.999f;
 		}
 
 		HyperParm& operator=(HyperParm& rhs) = default;

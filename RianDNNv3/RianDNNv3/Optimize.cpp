@@ -30,7 +30,7 @@ namespace rian
 			Layer& frontLayer = layers[(size_t)layer_idx + 1];
 
 			// Gradient clipping as
-			const float clip_threshold = 2.f;
+			const float clip_threshold = 10.f;
 			for (int i = 0; i < frontLayer.size; i++)
 			{
 				frontLayer.backprop[i] = min(frontLayer.backprop[i], clip_threshold);
@@ -40,10 +40,22 @@ namespace rian
 			// frontLayer bias update
 			for (int i = 0; i < frontLayer.size; i++)
 			{
-				frontLayer.biasMomentum[i] = 
+				//frontLayer.biasMomentum[i] = 
+				//	(frontLayer.biasMomentum[i] * hyperParm.MomentumRate)
+				//	- (hyperParm.LearningRate * frontLayer.backprop[i]);
+				//frontLayer.bias[i] += frontLayer.biasMomentum[i];
+
+				frontLayer.biasMomentum[i] =
 					(frontLayer.biasMomentum[i] * hyperParm.MomentumRate)
-					- (hyperParm.LearningRate * frontLayer.backprop[i]);
-				frontLayer.bias[i] += frontLayer.biasMomentum[i];
+					+ ((1.f - hyperParm.MomentumRate) * frontLayer.backprop[i]);
+				frontLayer.biasRMSProp[i] =
+					(frontLayer.biasRMSProp[i] * hyperParm.RMSPropRate)
+					+ ((1.f - hyperParm.RMSPropRate) * (frontLayer.backprop[i] * frontLayer.backprop[i]));
+
+				float Epsilon = 0.00001f;
+				float M = frontLayer.biasMomentum[i] / (1.f - hyperParm.MomentumRate);
+				float G = frontLayer.biasRMSProp[i] / (1.f - hyperParm.RMSPropRate);
+				frontLayer.bias[i] -= (hyperParm.LearningRate / (sqrtf(G + Epsilon))) * M;
 			}
 
 

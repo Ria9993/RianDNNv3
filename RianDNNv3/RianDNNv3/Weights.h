@@ -27,6 +27,7 @@ namespace rian
 #ifndef ONLY_FORWARD
 		// using as 2d
 		std::vector<float> momentum;
+		std::vector<float> RMSProp;
 #endif
 
 	};

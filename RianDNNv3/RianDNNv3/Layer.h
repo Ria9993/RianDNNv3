@@ -29,6 +29,7 @@ namespace rian
 		std::vector<float> forwardSum; // forwarded value sum (for calculate weight gradient)
 		std::vector<float> backprop;
 		std::vector<float> biasMomentum;
+		std::vector<float> biasRMSProp;
 #endif
 	};
 

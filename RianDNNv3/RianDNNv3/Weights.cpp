@@ -22,6 +22,7 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		momentum.resize((size_t)srcSize * destSize, 0);
+		RMSProp.resize((size_t)srcSize * destSize, 0);
 #endif
 	}
 
@@ -44,6 +45,7 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		momentum.resize((size_t)srcSize * destSize, 0);
+		RMSProp.resize((size_t)srcSize * destSize, 0);
 #endif
 	}
 
@@ -66,6 +68,7 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		momentum.resize((size_t)srcSize * destSize, 0);
+		RMSProp.resize((size_t)srcSize * destSize, 0);
 #endif
 	}
 }

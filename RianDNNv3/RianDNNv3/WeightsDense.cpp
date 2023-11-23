@@ -65,11 +65,22 @@ namespace rian
 				// stacking derivative
 				layer.backprop[i] += v[idx_2d] * frontLayer.backprop[front_idx];
 
-				momentum[idx_2d] =
+				/*momentum[idx_2d] =
 					(momentum[idx_2d] * model.hyperParm.MomentumRate)
 					- (model.hyperParm.LearningRate * grad);
-				v[idx_2d] += momentum[idx_2d];
+				v[idx_2d] += momentum[idx_2d];*/
 
+				momentum[idx_2d] =
+					(momentum[idx_2d] * model.hyperParm.MomentumRate)
+					+ ((1.f - model.hyperParm.MomentumRate) * frontLayer.backprop[front_idx]);
+				RMSProp[idx_2d] =
+					(RMSProp[idx_2d] * model.hyperParm.RMSPropRate)
+					+ ((1.f - model.hyperParm.RMSPropRate) * (frontLayer.backprop[front_idx] * frontLayer.backprop[front_idx]));
+
+				float Epsilon = 0.00001f;
+				float M = momentum[idx_2d] / (1.f - model.hyperParm.MomentumRate);
+				float G = RMSProp[idx_2d] / (1.f - model.hyperParm.RMSPropRate);
+				v[idx_2d] -= (model.hyperParm.LearningRate / (sqrtf(G + Epsilon))) * M;
 			}
 		}
 #ifdef GPGPU

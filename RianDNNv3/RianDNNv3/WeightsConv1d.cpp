@@ -4,7 +4,7 @@
 namespace rian
 {
 	WeightsConv1d::WeightsConv1d(int srcSize, int destSize, int kernelSize0, int stride0)
-		: Weights(kernelSize0, 1, sqrtf((float)2 / (srcSize, destSize)))
+		: Weights(kernelSize0, 1, sqrtf((float)2 / (srcSize + destSize)))
 		, kernelSize(kernelSize0)
 		, stride(stride0)
 	{
@@ -59,10 +59,22 @@ namespace rian
 
 		for (int i = 0; i < kernelSize; i++)
 		{
+			//momentum[i] =
+			//	(momentum[i] * model.hyperParm.MomentumRate)
+			//	- (model.hyperParm.LearningRate * sum_grad_v[i]);
+			//v[i] += momentum[i];
+
 			momentum[i] =
 				(momentum[i] * model.hyperParm.MomentumRate)
-				- (model.hyperParm.LearningRate * sum_grad_v[i]);
-			v[i] += momentum[i];
+				+ ((1.f - model.hyperParm.MomentumRate) * sum_grad_v[i]);
+			RMSProp[i] =
+				(RMSProp[i] * model.hyperParm.RMSPropRate)
+				+ ((1.f - model.hyperParm.RMSPropRate) * (sum_grad_v[i] * sum_grad_v[i]));
+
+			float Epsilon = 0.00001f;
+			float M = momentum[i] / (1.f - model.hyperParm.MomentumRate);
+			float G = RMSProp[i] / (1.f - model.hyperParm.RMSPropRate);
+			v[i] -= (model.hyperParm.LearningRate / (sqrtf(G + Epsilon))) * M;
 		}
 	}
 }

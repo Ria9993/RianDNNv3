@@ -16,6 +16,7 @@ namespace rian
 		// learning data
 #ifndef ONLY_FORWARD
 		biasMomentum.resize(size, 0);
+		biasRMSProp.resize(size, 0);
 		forwardSum.resize(size, 0);
 		actDiffSum.resize(size, 0);
 		backprop.resize(size, 0);

@@ -137,6 +137,7 @@ namespace rian
 			// Save layer bias and momentum
 			fwrite(layers[layer_idx].bias.data(), sizeof(float), layerSize, fp);
 			fwrite(layers[layer_idx].biasMomentum.data(), sizeof(float), layerSize, fp);
+			fwrite(layers[layer_idx].biasRMSProp.data(), sizeof(float), layerSize, fp);
 
 			if (layer_idx == 0)
 				continue;
@@ -148,6 +149,7 @@ namespace rian
 				fwrite(&weightSize, sizeof(size_t), 1, fp);
 				fwrite(now_weight->v.data(), sizeof(float), now_weight->v.size(), fp);
 				fwrite(now_weight->momentum.data(), sizeof(float), now_weight->momentum.size(), fp);
+				fwrite(now_weight->RMSProp.data(), sizeof(float), now_weight->RMSProp.size(), fp);
 			}
 			else if (layerType == LayerType::Conv1d) {
 				WeightsConv1d* now_weight = (WeightsConv1d*)weight[layer_idx - 1];
@@ -155,6 +157,7 @@ namespace rian
 				fwrite(&weightSize, sizeof(size_t), 1, fp);
 				fwrite(now_weight->v.data(), sizeof(float), now_weight->v.size(), fp);
 				fwrite(now_weight->momentum.data(), sizeof(float), now_weight->momentum.size(), fp);
+				fwrite(now_weight->RMSProp.data(), sizeof(float), now_weight->RMSProp.size(), fp);
 				fwrite(&now_weight->kernelSize, sizeof(int), 1, fp);
 				fwrite(&now_weight->stride, sizeof(int), 1, fp);
 			}
@@ -164,6 +167,7 @@ namespace rian
 				fwrite(&weightSize, sizeof(size_t), 1, fp);
 				fwrite(now_weight->v.data(), sizeof(float), now_weight->v.size(), fp);
 				fwrite(now_weight->momentum.data(), sizeof(float), now_weight->momentum.size(), fp);
+				fwrite(now_weight->RMSProp.data(), sizeof(float), now_weight->RMSProp.size(), fp);
 				fwrite(&now_weight->kernelSize, sizeof(int), 1, fp);
 				fwrite(&now_weight->stride, sizeof(int), 1, fp);
 			}
@@ -212,6 +216,8 @@ namespace rian
 			fread(layers[layer_idx].bias.data(), sizeof(float), layerSize, fp);
 			layers[layer_idx].biasMomentum.resize(layerSize);
 			fread(layers[layer_idx].biasMomentum.data(), sizeof(float), layerSize, fp);
+			layers[layer_idx].biasRMSProp.resize(layerSize);
+			fread(layers[layer_idx].biasRMSProp.data(), sizeof(float), layerSize, fp);
 
 			// resize member vectors
 			layers[layer_idx].result.resize(layerSize);
@@ -232,6 +238,8 @@ namespace rian
 				fread(now_weight->v.data(), sizeof(float), weightSize, fp);
 				now_weight->momentum.resize(weightSize);
 				fread(now_weight->momentum.data(), sizeof(float), weightSize, fp);
+				now_weight->RMSProp.resize(weightSize);
+				fread(now_weight->RMSProp.data(), sizeof(float), weightSize, fp);
 			}
 			else if (layerType == LayerType::Conv1d) {
 				WeightsConv1d* now_weight = new WeightsConv1d();
@@ -242,6 +250,8 @@ namespace rian
 				fread(now_weight->v.data(), sizeof(float), weightSize, fp);
 				now_weight->momentum.resize(weightSize);
 				fread(now_weight->momentum.data(), sizeof(float), weightSize, fp);
+				now_weight->RMSProp.resize(weightSize);
+				fread(now_weight->RMSProp.data(), sizeof(float), weightSize, fp);
 				fread(&now_weight->kernelSize, sizeof(int), 1, fp);
 				fread(&now_weight->stride, sizeof(int), 1, fp);
 				now_weight->sum_grad_v.resize(weightSize);
@@ -255,6 +265,8 @@ namespace rian
 				fread(now_weight->v.data(), sizeof(float), weightSize, fp);
 				now_weight->momentum.resize(weightSize);
 				fread(now_weight->momentum.data(), sizeof(float), weightSize, fp);
+				now_weight->RMSProp.resize(weightSize);
+				fread(now_weight->RMSProp.data(), sizeof(float), weightSize, fp);
 				fread(&now_weight->kernelSize, sizeof(int), 1, fp);
 				fread(&now_weight->stride, sizeof(int), 1, fp);
 				now_weight->sum_grad_v.resize(weightSize);
