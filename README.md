@@ -11,7 +11,9 @@ Just simple neural-network library
 - **Layer**
   - Dense
   - Convolution 1D
-  - Transposed Convolution 1D  
+  - Transposed Convolution 1D
+- **Optimizer**
+  - Adam (default)
 ## Preview AutoEncoder Test
 https://github.com/Ria9993/RianDNNv3/assets/44316628/2c675696-bb14-4d1d-8a11-3372584cb6ce  
 ## Exmaple
